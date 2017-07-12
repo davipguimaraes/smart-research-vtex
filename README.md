@@ -46,6 +46,8 @@ $(".menuLateral input[type='checkbox']").vtexSmartResearch({
 	usePopup:false, // Opção p/ definir se deseja que a mensagem de não localizado seja exibida em um popup
 	showLinks:true, // Exibe o menu de links caso o de filtro não seja encontrado
 	popupAutoCloseSeconds:3, // Caso esteja utilizando popup, defina aqui o tempo para que ele feche automaticamente
+	filterOnChange:true, // Permite que o filtro seja aplicado assim que a opção é marcada
+	filterButtonClass: ".filter-btn", // Classe do botão que terá a ação de filtro caso a "filterOnChange" seja false
 	// Função que retorna o valor p/ onde a página deve rolar quando o usuário marca ou desmarca um filtro
 	filterScrollTop:function(shelfOffset)
 	{
