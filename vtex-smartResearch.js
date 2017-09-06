@@ -261,8 +261,8 @@ jQuery.fn.vtexSmartResearch=function(opts)
 				fns.applyFilter();
 			});
 
-			jQuery(options.clearButtonClass).on('click', function(){
-				fns.clearFilter();
+			jQuery(options.clearButtonClass).on('click', function(e){
+				fns.clearFilter(e, this);
 			});
 
 			if(""!==urlFilters)
@@ -367,8 +367,13 @@ jQuery.fn.vtexSmartResearch=function(opts)
 			// Adicionando classe ao label
 			input.parent().addClass("sr_selected");
 		},
-		clearFilter: function() {
+		clearFilter: function(evt, obj) {
 			urlFilters = "";
+			var parent = $(obj).parent();
+			$('input:checked', parent).each(function(i, el){
+				$(el).attr('checked', false).parent().removeClass("sr_selected");
+			});
+			
 			fns.applyFilter();
 		},
 		removeFilter:function(input)
