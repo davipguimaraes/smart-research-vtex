@@ -48,6 +48,7 @@ $(".menuLateral input[type='checkbox']").vtexSmartResearch({
 	popupAutoCloseSeconds:3, // Caso esteja utilizando popup, defina aqui o tempo para que ele feche automaticamente
 	filterOnChange:true, // Permite que o filtro seja aplicado assim que a opção é marcada
 	filterButtonClass: ".filter-btn", // Classe do botão que terá a ação de filtro caso a "filterOnChange" seja false
+	clearButtonClass: ".clear-filter-btn", // Classe para o botão que limpa todos os filtros
 	// Função que retorna o valor p/ onde a página deve rolar quando o usuário marca ou desmarca um filtro
 	filterScrollTop:function(shelfOffset)
 	{

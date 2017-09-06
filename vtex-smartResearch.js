@@ -38,6 +38,7 @@ jQuery.fn.vtexSmartResearch=function(opts)
 		popupAutoCloseSeconds:3, // Caso esteja utilizando popup, defina aqui o tempo para que ele feche automaticamente
 		filterOnChange:true, // Permite que o filtro seja aplicado assim que a opção é marcada
 		filterButtonClass: ".filter-btn", // Classe do botão que terá a ação de filtro caso a "filterOnChange" seja false
+		clearButtonClass: ".clear-filter-btn", // Classe para o botão que limpa todos os filtros
 		// Função que retorna o valor p/ onde a página deve rolar quando o usuário marca ou desmarca um filtro
 		filterScrollTop:function(shelfOffset)
 		{
@@ -246,17 +247,22 @@ jQuery.fn.vtexSmartResearch=function(opts)
 
 				_this.bind("change",function(){
 					fns.inputAction();
-					if(_this.is(":checked"))
+					if(_this.is(":checked")){
 						fns.addFilter(_this);
-					else
+					} else {
 						fns.removeFilter(_this);
-					ajaxCallbackObj.filters=$this.filter(":checked").length;
+					}
+					if(options.filterOnChange) {
+						ajaxCallbackObj.filters=$this.filter(":checked").length;
+					}
 				});
 			});
-			console.log(options.filterButtonClass);
 			jQuery(options.filterButtonClass).on('click', function(){
-				console.log('apply filter');
 				fns.applyFilter();
+			});
+
+			jQuery(options.clearButtonClass).on('click', function(){
+				fns.clearFilter();
 			});
 
 			if(""!==urlFilters)
@@ -353,22 +359,25 @@ jQuery.fn.vtexSmartResearch=function(opts)
 		addFilter:function(input)
 		{
 			urlFilters+="&"+(input.attr("rel")||"");
-			prodOverlay.fadeTo(300,0.6);
 			currentSearchUrl=fn.getUrl();
 			if(options.filterOnChange) {
+				prodOverlay.fadeTo(300,0.6);
 				fns.applyFilter();
 			}
 			// Adicionando classe ao label
 			input.parent().addClass("sr_selected");
 		},
+		clearFilter: function() {
+			urlFilters = "";
+			fns.applyFilter();
+		},
 		removeFilter:function(input)
 		{
 			var url=(input.attr("rel")||"");
-			prodOverlay.fadeTo(300,0.6);
 			if(url!=="")
 				urlFilters=urlFilters.replace("&"+url,"");
-
 			if(options.filterOnChange) {
+				prodOverlay.fadeTo(300,0.6);
 				fns.applyFilter();
 			}
 			// Removendo classe do label
