@@ -369,10 +369,7 @@ jQuery.fn.vtexSmartResearch=function(opts)
 		},
 		clearFilter: function(evt, obj) {
 			urlFilters = "";
-			var parent = $(obj).parent();
-			$('input:checked', parent).each(function(i, el){
-				$(el).attr('checked', false).parent().removeClass("sr_selected");
-			});
+			$('input:checked').prop('checked',false).parent().removeClass("sr_selected");
 			
 			fns.applyFilter();
 		},
