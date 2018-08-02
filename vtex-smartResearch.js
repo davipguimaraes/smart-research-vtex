@@ -267,6 +267,14 @@ jQuery.fn.vtexSmartResearch=function(opts)
 
 			if(""!==urlFilters)
 				fns.addFilter($empty);
+
+			fns.triggerEvent('vsr-complete');
+		},
+		triggerEvent:function(nameEvent,elemento){
+			if( undefined == nameEvent ) return;
+			
+			elemento = elemento || filtersMenuE;
+			$(elemento).trigger(nameEvent);
 		},
 		mergeMenu:function()
 		{
@@ -363,6 +371,7 @@ jQuery.fn.vtexSmartResearch=function(opts)
 			if(options.filterOnChange) {
 				prodOverlay.fadeTo(300,0.6);
 				fns.applyFilter();
+				fns.triggerEvent('vsr-add-filter');
 			}
 			// Adicionando classe ao label
 			input.parent().addClass("sr_selected");
@@ -372,6 +381,7 @@ jQuery.fn.vtexSmartResearch=function(opts)
 			$('input:checked').prop('checked',false).parent().removeClass("sr_selected");
 			
 			fns.applyFilter();
+			fns.triggerEvent('vsr-clean-all-filter');
 		},
 		removeFilter:function(input)
 		{
@@ -381,6 +391,7 @@ jQuery.fn.vtexSmartResearch=function(opts)
 			if(options.filterOnChange) {
 				prodOverlay.fadeTo(300,0.6);
 				fns.applyFilter();
+				fns.triggerEvent('vsr-remove-filter');
 			}
 			// Removendo classe do label
 			input.parent().removeClass("sr_selected");
@@ -393,12 +404,17 @@ jQuery.fn.vtexSmartResearch=function(opts)
 			ajaxCallbackObj.requests++;
 			options.ajaxCallback(ajaxCallbackObj);
 			_html.animate({scrollTop:options.filterScrollTop((loadContentOffset||{top:0,left:0}))},600);
+
+			
+			fns.triggerEvent('vsr-ajax-sucess');
 		},
 		filterAjaxError:function()
 		{
 			prodOverlay.fadeTo(300,0,function(){jQuery(this).hide();});
 			alert(options.filterErrorMsg);
 			log("Houve um erro ao tentar fazer a requisição da página com filtros.");
+
+			fns.triggerEvent('vsr-ajax-fail');
 		},
 		updateContent:function($data)
 		{
