@@ -31,6 +31,7 @@ jQuery.fn.vtexSmartResearch=function(opts)
 		elemLoading:'<div id="scrollLoading">Carregando ... </div>', // Elemento com mensagem de carregando ao iniciar a requisição da página seguinte
 		returnTopText:'<span class="text">voltar ao</span><span class="text2">TOPO</span>', // Mensagem de "retornar ao topo"
 		emptySearchMsg:'<h3>Esta combinação de filtros não retornou nenhum resultado!</h3>', // Html com a mensagem para ser apresentada quando não existirem resultados para os filtros selecionados
+		alertFilterErro:true, // exibe aler casso haja erro algum erro de servidor ao aplicar os filtros
 		filterErrorMsg:"Houve um erro ao tentar filtrar a página!", // Mensagem de erro exibida quando existe algum erro de servidor ao aplicar os filtros
 		searchUrl:null, // Url da página de busca (opicional)
 		usePopup:false, // Opção p/ definir se deseja que a mensagem de não localizado seja exibida em um popup
@@ -411,7 +412,9 @@ jQuery.fn.vtexSmartResearch=function(opts)
 		filterAjaxError:function()
 		{
 			prodOverlay.fadeTo(300,0,function(){jQuery(this).hide();});
-			alert(options.filterErrorMsg);
+			if(options.alertFilterErro){
+				alert(options.filterErrorMsg);
+			}
 			log("Houve um erro ao tentar fazer a requisição da página com filtros.");
 
 			fns.triggerEvent('vsr-ajax-fail');
