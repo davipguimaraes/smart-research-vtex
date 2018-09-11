@@ -39,6 +39,8 @@ jQuery.fn.vtexSmartResearch=function(opts)
 		filterOnChange:true, // Permite que o filtro seja aplicado assim que a opção é marcada
 		filterButtonClass: ".filter-btn", // Classe do botão que terá a ação de filtro caso a "filterOnChange" seja false
 		clearButtonClass: ".clear-filter-btn", // Classe para o botão que limpa todos os filtros
+		infinitScroll:true, // Permite que o filtro seja aplicado assim que a opção é marcada
+		loadMoreText:"Carregar mais...", // Permite que o filtro seja aplicado assim que a opção é marcada
 		// Função que retorna o valor p/ onde a página deve rolar quando o usuário marca ou desmarca um filtro
 		filterScrollTop:function(shelfOffset)
 		{
@@ -156,6 +158,18 @@ jQuery.fn.vtexSmartResearch=function(opts)
 				else
 					return false;
 			});
+		},
+		loadMore:function(paginador){
+			var $loadMore = $('<div />',{class:'load-more'}).insertAfter(loadContentE);
+			var btn = 	$('<button />',{class:"btn",text:options.loadMoreText}).appendTo($loadMore);
+
+			btn.click(function(){
+				if(paginador.isDisponivelParaNovaBusca() ) {
+					paginador.proxima();
+				}
+				else
+					return false;
+			});
 		}
 	};
 	var paginas = function(){
@@ -171,7 +185,7 @@ jQuery.fn.vtexSmartResearch=function(opts)
 				return disponivel;
 			},
 			"getTotalPaginas":function(){
-				var idElementoPaginacao ,pages,idPaginacao;
+				var idElementoPaginacao ,idPaginacao;
 
 				if(null!== options.pageLimit){
 					return options.pageLimit
@@ -218,6 +232,8 @@ jQuery.fn.vtexSmartResearch=function(opts)
 		}
 		return paginador;
 	}
+	var paginador = paginas();
+	
 
 	if(null!==options.searchUrl)
 		currentSearchUrl=searchUrl=options.searchUrl;
@@ -228,7 +244,11 @@ jQuery.fn.vtexSmartResearch=function(opts)
 	if($this.length<1) {
 		log("Nenhuma opção de filtro encontrada","Aviso");
 		if(options.showLinks) jQuery(options.linksMenu).css("visibility","visible").show();
-		fn.infinitScroll( paginas() );
+		if( options.infinitScroll ){
+			fn.infinitScroll( paginador );
+		}else{
+			fn.loadMore( paginador );
+		}
 		fn.scrollToTop();
 		return $this;
 	}
@@ -292,7 +312,7 @@ jQuery.fn.vtexSmartResearch=function(opts)
 			});
 
 			jQuery(options.clearButtonClass).on('click', function(e){
-				fns.clearFilter(e, this);
+				fns.removeAllFilters(e, this);
 			});
 
 			if(""!==urlFilters)
@@ -406,7 +426,7 @@ jQuery.fn.vtexSmartResearch=function(opts)
 			// Adicionando classe ao label
 			input.parent().addClass("sr_selected");
 		},
-		clearFilter: function(evt, obj) {
+		removeAllFilters: function(evt, obj) {
 			urlFilters = "";
 			$('input:checked').prop('checked',false).parent().removeClass("sr_selected");
 			
@@ -431,11 +451,11 @@ jQuery.fn.vtexSmartResearch=function(opts)
 			var $data=jQuery(data);
 			prodOverlay.fadeTo(300,0,function(){jQuery(this).hide();});
 			fns.updateContent($data);
+
 			ajaxCallbackObj.requests++;
 			options.ajaxCallback(ajaxCallbackObj);
 			_html.animate({scrollTop:options.filterScrollTop((loadContentOffset||{top:0,left:0}))},600);
 
-			
 			fns.triggerEvent('vsr-ajax-sucess');
 		},
 		filterAjaxError:function()
@@ -523,7 +543,12 @@ jQuery.fn.vtexSmartResearch=function(opts)
 		fns.mergeMenuList();
 
 	fns.exec();
-	fn.infinitScroll( paginas() );
+	
+	if( options.infinitScroll ){
+		fn.infinitScroll( paginador );
+	}else{
+		fn.loadMore( paginador );
+	}
 	fn.scrollToTop();
 	options.callback();
 
