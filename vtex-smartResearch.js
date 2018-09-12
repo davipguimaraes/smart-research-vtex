@@ -40,7 +40,7 @@ jQuery.fn.vtexSmartResearch=function(opts)
 		filterButtonClass: ".filter-btn", // Classe do botão que terá a ação de filtro caso a "filterOnChange" seja false
 		clearButtonClass: ".clear-filter-btn", // Classe para o botão que limpa todos os filtros
 		infinitScroll:true, // Permite que o filtro seja aplicado assim que a opção é marcada
-		loadMoreText:"Carregar mais...", // Permite que o filtro seja aplicado assim que a opção é marcada
+		loadMoreText:"Carregar mais", // Permite que o filtro seja aplicado assim que a opção é marcada
 		// Função que retorna o valor p/ onde a página deve rolar quando o usuário marca ou desmarca um filtro
 		filterScrollTop:function(shelfOffset)
 		{
@@ -160,6 +160,7 @@ jQuery.fn.vtexSmartResearch=function(opts)
 			});
 		},
 		loadMore:function(paginador){
+			
 			var $loadMore = $('<div />',{class:'load-more'}).insertAfter(loadContentE);
 			var btn = 	$('<button />',{class:"btn",text:options.loadMoreText}).appendTo($loadMore);
 
@@ -167,8 +168,20 @@ jQuery.fn.vtexSmartResearch=function(opts)
 				if(paginador.isDisponivelParaNovaBusca() ) {
 					paginador.proxima();
 				}
-				else
-					return false;
+			});
+			
+			loadContentE.on('vsr-request-init',function(){
+				btn.prop('disabled',true).addClass('loading');
+					
+				if(!btn.is(':visible') && moreResults){
+					btn.fadeIn();
+				}
+			});
+			loadContentE.on('vsr-request-end',function(){
+				btn.prop('disabled',false).removeClass('loading');
+				if(!moreResults){
+					btn.fadeOut();
+				}
 			});
 		}
 	};
@@ -207,11 +220,12 @@ jQuery.fn.vtexSmartResearch=function(opts)
 				var currentItems=loadContentE.find(options.shelfClass).filter(":last");
 				currentItems.after(elemLoading);
 				currentStatus=false;
+
+				fns.triggerEvent('vsr-request-init',loadContentE);
 				
 				pageJqxhr=jQuery.ajax({
 					url: fn.getUrl(true),
-					success:function(data)
-					{
+					success:function(data){
 						if(data.trim().length<1)
 						{
 							moreResults=false;
@@ -225,8 +239,14 @@ jQuery.fn.vtexSmartResearch=function(opts)
 						elemLoading.remove();
 						ajaxCallbackObj.requests++;
 						options.ajaxCallback(ajaxCallbackObj);
+						
+						fns.triggerEvent('vsr-ajax-sucess');
+					},
+					complete:function(){
+						fns.triggerEvent('vsr-request-end',loadContentE);
 					}
 				});
+				
 				currentPage++;
 			}
 		}
@@ -408,10 +428,15 @@ jQuery.fn.vtexSmartResearch=function(opts)
 		},
 		applyFilter: function() {
 			currentSearchUrl=fn.getUrl();
+
+			fns.triggerEvent('vsr-request-init',loadContentE);
 			shelfJqxhr=jQuery.ajax({
 				url:currentSearchUrl,
 				success:fns.filterAjaxSuccess,
-				error:fns.filterAjaxError
+				error:fns.filterAjaxError,
+				complete:function(){
+					fns.triggerEvent('vsr-request-end',loadContentE);
+				}
 			});	
 		},
 		addFilter:function(input)
