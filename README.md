@@ -54,6 +54,9 @@ $(".menuLateral input[type='checkbox']").vtexSmartResearch({
 	filterOnChange: true,
 	filterButtonClass:  ".filter-btn",
 	clearButtonClass:  ".clear-filter-btn",
+	infinitScroll:true, 
+	loadMoreText:"Carregar mais...", 
+		
 	
 	filterScrollTop:function(shelfOffset){ return (shelfOffset.top-20);},
 	callback:function(){},
@@ -93,6 +96,8 @@ popupAutoCloseSeconds | `3` | Caso esteja utilizando popup, defina aqui o tempo 
 filterOnChange | `true` | Permite que o filtro seja aplicado assim que a opção é marcada
 filterButtonClass |  `".filter-btn"` | Classe do botão que terá a ação de filtro caso a "filterOnChange" seja false
 clearButtonClass |  `".clear-filter-btn"` | Classe para o botão que limpa todos os filtros
+infinitScroll | true |  Permite que o filtro seja aplicado assim que a opção é marcada
+loadMoreText | "Carregar mais..." |  Permite que o filtro seja aplicado assim que a opção é marcada
 
 
 ### Callbacks
@@ -173,3 +178,5 @@ Evento | diparado
 `vsr-add-filter` | Ocorre quando o filtro é marcado
 `vsr-remove-filter` | Ocorre quando o filtro é desmarcado
 `vsr-clean-all-filter` | Ocorre quando todos filtros removidos de uma só vez
+`vsr-request-init` | Ocorre quando uma requisição de filtro ou nova pagina é iniciada
+`vsr-request-end` | Ocorre quando uma requisição de filtro ou nova pagina é finalizada
