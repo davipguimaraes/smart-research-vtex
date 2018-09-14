@@ -341,11 +341,11 @@ jQuery.fn.vtexSmartResearch=function(opts)
 
 			fns.triggerEvent('vsr-complete');
 		},
-		triggerEvent:function(nameEvent,elemento){
+		triggerEvent:function(nameEvent,elemento,data){
 			if( undefined == nameEvent ) return;
 			
 			elemento = elemento || filtersMenuE;
-			$(elemento).trigger(nameEvent);
+			$(elemento).trigger(nameEvent,data);
 		},
 		mergeMenu:function()
 		{
@@ -430,7 +430,7 @@ jQuery.fn.vtexSmartResearch=function(opts)
 		applyFilter: function() {
 			currentSearchUrl=fn.getUrl();
 
-			fns.triggerEvent('vsr-request-init',loadContentE);
+			fns.triggerEvent('vsr-request-init',loadContentE,currentSearchUrl);
 			shelfJqxhr=jQuery.ajax({
 				url:currentSearchUrl,
 				success:fns.filterAjaxSuccess,
