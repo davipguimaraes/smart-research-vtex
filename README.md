@@ -180,3 +180,5 @@ Evento | diparado
 `vsr-clean-all-filter` | Ocorre quando todos filtros removidos de uma só vez
 `vsr-request-init` | Ocorre quando uma requisição de filtro ou nova pagina é iniciada
 `vsr-request-end` | Ocorre quando uma requisição de filtro ou nova pagina é finalizada
+`vsr-more-results` | Evento comunica que ainda ha mais produtos para serem carregados
+`vsr-no-more-results` | Evento de avisa que não ha mais produtos para esse filtro
